@@ -177,7 +177,7 @@ namespace SM_PracenjeRadnika
         {
 
             string qUpit = " select [Routing Reference No_] as [referentni broj proizvodnog postupka], [Operation No_] as [Broj operacije]," +
-                " 'Radni centar' as Vrsta,[Work Center No_] as Broj, Description as Opis ,[Setup Time] as [vreme podešavanja], [Run Time] as [vreme izvođenja],[Setup Time Unit of Meas_ Code] as [Vremenska jedinica] ,[Send-Ahead Quantity] as [unapred poslata količina], [Concurrent Capacities] as  [uporedni kapaciteti] " +
+                " 'Radni centar' as Vrsta,[Work Center No_] as Broj, Description as Opis ,[Setup Time] as [vreme podešavanja], [Run Time] as [vreme izvođenja],[Setup Time Unit of Meas_ Code] as [Vremenska jedinica] ,[Send-Ahead Quantity] as [unapred poslata količina], [Concurrent Capacities] as  [uporedni kapaciteti], [Work Center Group Code] " +
                 " FROM            [Stirg Produkcija$Prod_ Order Routing Line]" +
                  " WHERE        ([Prod_ Order No_] = N'" + prodOrderNo + "') AND ([Routing Reference No_] = '" + referenceNo + "') and [Operation No_]='" + operationNo + "'";
           if (cbRadnaGrupa.Text != "")
