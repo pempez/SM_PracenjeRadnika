@@ -1,0 +1,36 @@
+da krenemo
+
+treba mi opcija da selektujem sve operaccije koje je radio
+
+da sabere vremena u nekom periodu
+
+zatim posebne opcije
+
+gde god ima onaj - u vremenu čekiranja to znači da je bila neka greška u čekiranju
+
+to izbaciti
+
+zatim izbaciti sva čekiranja gde se koristi radni centar eksterna usluga
+
+ima 2 kom sa -M i -S
+
+to za početak
+
+onda mi treba da prikazuje kada selektujem operaciju da mi pokaže PORL da vidimo propisana vremena za operaciju
+
+OPS
+
+to imam
+
+:D
+predviđeno vreme nešto nije u redu
+
+razdvoj ga na dva dela
+
+prvo predviđeno vreme je za količinu propisanu na nalogu
+
+a drugo je za količinu koju je čekirao
+
+ako je čekirao 2 kom (a  treba 5 ) na nalogu onda je prvo 5*vreme+podešavanje
+
+a drugo 2*vreme+podešavanje
