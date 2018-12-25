@@ -30,15 +30,18 @@ namespace SM_PracenjeRadnika
             cbRadnaGrupa.SelectedIndex = -1;
 
 
+           
+
         }
 
         private void popuniCBradnik()
         {
-            cbRadnik.DataSource = metode.DB.baza_upit("SELECT   TOP (100) PERCENT No_, Name " +
+            DataTable dt = metode.DB.baza_upit("SELECT   TOP (100) PERCENT No_, Name " +
                                     " FROM            dbo.[Stirg Produkcija$Resource] WHERE        (Name <> N'') ORDER BY Name");
+            cbRadnik.DataSource = dt;
             cbRadnik.DisplayMember = "Name";
             cbRadnik.ValueMember = "No_";
-
+            
         }
 
         private void popuniWC()
@@ -110,7 +113,7 @@ namespace SM_PracenjeRadnika
            " dbo.[Stirg Produkcija$Prod_ Order Routing Line] ON dbo.[Stirg Produkcija$Prod_ Order Line].[Prod_ Order No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Prod_ Order No_] AND " +
                 "  dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Routing Reference No_] AND " +
                 "  dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Operation No_] " +
-                "WHERE(1 = 1)";
+                "WHERE(1 = 1)  AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) ";
 
             qSelect = PrimeniFiltere(qSelect);
 
@@ -154,7 +157,8 @@ namespace SM_PracenjeRadnika
 
             string qSelect = "SELECT DISTINCT TOP(100) PERCENT dbo.[Stirg Produkcija$Output Journal Data].[Item No_] AS[Broj artikla], CASE WHEN dbo.[Stirg Produkcija$Output Journal Data].Status = 0 THEN 'započeta' ELSE 'proknjižena' END AS status, " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Prod_ Order No_] AS[Broj naloga za proizvodnju], dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] AS[Broj operacije],  " +
-                         "  dbo.[Stirg Produkcija$Output Journal Data].[Last Operation No_] AS[Broj poslednje operacije], dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] AS[Datum knjiženja], CONVERT(char(5),  " +
+                         "  dbo.[Stirg Produkcija$Output Journal Data].[Last Operation No_] AS[Broj poslednje operacije], dbo.[Stirg Produkcija$Prod_ Order Line].Quantity AS [Naručena količina], " +
+                         "  dbo.[Stirg Produkcija$Prod_ Order Line].[Finished Quantity] AS[Urađena količina], dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] AS[Datum knjiženja], CONVERT(char(5),  " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], 108) AS[Vreme prvog registrovanog početka], CONVERT(char(5), dbo.[Stirg Produkcija$Output Journal Data].[Ending Time], 108)  " +
                          "  AS[Vreme poslednjeg registrovanog završetka],    CASE WHEN DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) = 0 THEN 1 ELSE" +
                          " DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) END  AS[stvarno Trajanje],  " +
@@ -171,7 +175,7 @@ namespace SM_PracenjeRadnika
                        "   dbo.[Stirg Produkcija$Prod_ Order Routing Line] ON dbo.[Stirg Produkcija$Prod_ Order Line].[Prod_ Order No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Prod_ Order No_] AND " +
                        "   dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Routing Reference No_]" +
                        "  AND      dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Operation No_] " +
-                    " WHERE    (dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = N'" + radnik + "') AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) ";
+                    " WHERE    (dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = N'" + radnik + "')  AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) ";
 
 
             qSelect = PrimeniFiltere(qSelect);
@@ -189,6 +193,8 @@ namespace SM_PracenjeRadnika
             {
                 lblOJD.Text = dt.Rows.Count.ToString();
                 dgvOutpuJournalData.DataSource = dt;
+                dgvOutpuJournalData.Columns["Urađena količina"].DefaultCellStyle.Format = "N2";
+                dgvOutpuJournalData.Columns["Naručena količina"].DefaultCellStyle.Format = "N2";
                 dgvOutpuJournalData.Columns["Izlazna količina"].DefaultCellStyle.Format = "N2";
                 dgvOutpuJournalData.Columns["Količina škarta"].DefaultCellStyle.Format = "N2";
                 dgvOutpuJournalData_Click(null, null);
@@ -305,11 +311,13 @@ namespace SM_PracenjeRadnika
 
         private void dgvRadnici_Click(object sender, EventArgs e)
         {
-            UcitajOJD(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
+            if (dgvRadnici.Rows.Count > 0)
+            {
+                UcitajOJD(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
 
-           
-            UcitajIskoriscenost(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
 
+                UcitajIskoriscenost(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
+            }
         }
 
         private void dgvOutpuJournalData_Click(object sender, EventArgs e)
@@ -373,16 +381,28 @@ namespace SM_PracenjeRadnika
 
                 if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
                     predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
+                if (uradjeno > 0)
+                {
+                    tbUtrosenoVreme.Text = utrosenoVreme.ToString();
+                    tbIzlaznaKolicina.Text = uradjeno.ToString();
+                    tbSkart.Text = skart.ToString();
 
-                tbUtrosenoVreme.Text = utrosenoVreme.ToString();
-                tbIzlaznaKolicina.Text = uradjeno.ToString();
-                tbSkart.Text = skart.ToString();
+                    predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
+                    tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
 
-                predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
-                tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
-
-                procenat = predvidjenoVreme * 100 / utrosenoVreme;
-                tbProcenat.Text = procenat.ToString("##.##") + "%";
+                    procenat = predvidjenoVreme * 100 / utrosenoVreme;
+                    tbProcenat.Text = procenat.ToString("##.##") + "%";
+                    gbOdradjeno.Visible = true;
+                    gbPredvidjenoVreme.Visible = false;
+                }
+                else
+                {
+                    tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
+                    predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu;
+                    tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+                    gbPredvidjenoVreme.Visible = true;
+                    gbOdradjeno.Visible = false;
+                }
             }
         }
 
@@ -425,6 +445,27 @@ namespace SM_PracenjeRadnika
                 tbUkupnoUtrosenoVremeSati.Text = "";
                 tbUkupnoPredvidjenoVremeSati.Text = "";
             }
+        }
+
+       
+        private void dgvRadnici_SelectionChanged(object sender, EventArgs e)
+        {
+            dgvRadnici_Click(null, null);
+        }
+
+        private void dgvOutpuJournalData_SelectionChanged(object sender, EventArgs e)
+        {
+            dgvOutpuJournalData_Click(null, null);
+        }
+
+        private void dgvRadnici_MouseEnter(object sender, EventArgs e)
+        {
+            dgvRadnici.Focus();
+        }
+
+        private void dgvOutpuJournalData_MouseEnter(object sender, EventArgs e)
+        {
+            dgvOutpuJournalData.Focus();
         }
     }
 }
