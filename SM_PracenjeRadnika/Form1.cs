@@ -12,6 +12,7 @@ namespace SM_PracenjeRadnika
 {
     public partial class Form1 : Form
     {
+        private static double granicnoVreme = 1;//120
 
         public Form1()
         {
@@ -30,7 +31,9 @@ namespace SM_PracenjeRadnika
             cbRadnaGrupa.SelectedIndex = -1;
 
 
-           
+            //cbPeriodOJD.Checked = true;
+            //dtpOJDod.Value = new DateTime(2018, 7, 23);
+            //dtpOJDdo.Value = new DateTime(2018, 7, 23);
 
         }
 
@@ -113,7 +116,8 @@ namespace SM_PracenjeRadnika
            " dbo.[Stirg Produkcija$Prod_ Order Routing Line] ON dbo.[Stirg Produkcija$Prod_ Order Line].[Prod_ Order No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Prod_ Order No_] AND " +
                 "  dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Routing Reference No_] AND " +
                 "  dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Operation No_] " +
-                "WHERE(1 = 1)  AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) ";
+                "WHERE(1 = 1)  AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0)" +
+                " and dbo.[Stirg Produkcija$Resource].Name<>N'' ";
 
             qSelect = PrimeniFiltere(qSelect);
 
@@ -135,6 +139,7 @@ namespace SM_PracenjeRadnika
                 dgvRadnici.DataSource = null;
                 dgvOutpuJournalData.DataSource = null;
                 dgvProdOrderRoutingLine.DataSource = null;
+                MessageBox.Show("Nema podataka za zadati kriterijum");
             }
 
         }
@@ -158,13 +163,13 @@ namespace SM_PracenjeRadnika
             string qSelect = "SELECT DISTINCT TOP(100) PERCENT dbo.[Stirg Produkcija$Output Journal Data].[Item No_] AS[Broj artikla], CASE WHEN dbo.[Stirg Produkcija$Output Journal Data].Status = 0 THEN 'započeta' ELSE 'proknjižena' END AS status, " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Prod_ Order No_] AS[Broj naloga za proizvodnju], dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] AS[Broj operacije],  " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Last Operation No_] AS[Broj poslednje operacije], dbo.[Stirg Produkcija$Prod_ Order Line].Quantity AS [Naručena količina], " +
-                         "  dbo.[Stirg Produkcija$Prod_ Order Line].[Finished Quantity] AS[Urađena količina], dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] AS[Datum knjiženja], CONVERT(char(5),  " +
+                         "  dbo.[Stirg Produkcija$Prod_ Order Line].[Finished Quantity] AS[Urađena količina], dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] AS[Izlazna količina], dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity] AS[Količina škarta], dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] AS[Datum knjiženja], CONVERT(char(5),  " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], 108) AS[Vreme prvog registrovanog početka], CONVERT(char(5), dbo.[Stirg Produkcija$Output Journal Data].[Ending Time], 108)  " +
                          "  AS[Vreme poslednjeg registrovanog završetka],    CASE WHEN DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) = 0 THEN 1 ELSE" +
                          " DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) END  AS[stvarno Trajanje],  " +
-                         "  dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] AS[Izlazna količina], dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity] AS[Količina škarta],  " +
+                         "   " +
                          "  dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] AS[Šifra resursa], dbo.[Stirg Produkcija$Resource].Name AS[Ime resursa], dbo.[Stirg Produkcija$Output Journal Data].[Line No_] AS[Broj reda],  " +
-                         "  dbo.[Stirg Produkcija$Output Journal Data].[Controlled Operation No_] AS[Broj kontrolisane operacije], dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_] " +
+                         "  dbo.[Stirg Produkcija$Output Journal Data].[Controlled Operation No_] AS[Broj kontrolisane operacije], dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_], dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time] " +
         "  FROM dbo.[Stirg Produkcija$Output Journal Data] INNER JOIN " +
 
                         "  dbo.[Stirg Produkcija$Resource] ON dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = dbo.[Stirg Produkcija$Resource].No_ INNER JOIN " +
@@ -314,9 +319,27 @@ namespace SM_PracenjeRadnika
             if (dgvRadnici.Rows.Count > 0)
             {
                 UcitajOJD(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
-
-
                 UcitajIskoriscenost(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
+
+                gpKontejner.Visible = false;
+                //ucitaj predvidjeoNula ukupno
+                double ukupnoPredvidjeno = 0;
+                foreach(DataGridViewRow r in dgvOutpuJournalData.Rows)
+                {
+                    string prodOrderNo = r.Cells["Broj naloga za proizvodnju"].Value.ToString();
+                    string lineNo = r.Cells["Line No_"].Value.ToString();
+                    string operationNo = r.Cells["broj Operacije"].Value.ToString();
+                    string itemNo = r.Cells["broj artikla"].Value.ToString();
+
+                    //nadji ko je radio i vrati broj ukupnih cekiranja
+                    double ukupnoCekirani = KoJeJosRadio(prodOrderNo, itemNo, operationNo);
+                    ucitajProdOrderRoutingLine(prodOrderNo, lineNo, operationNo);
+
+                   double ukupno= IzracunajVreme(ukupnoCekirani,r);
+                    ukupnoPredvidjeno += ukupno;
+                }
+                gpKontejner.Visible = true;
+                tbUkupnoPredvidjenoVremeNula.Text = ukupnoPredvidjeno.ToString();
             }
         }
 
@@ -327,32 +350,105 @@ namespace SM_PracenjeRadnika
                 string prodOrderNo = dgvOutpuJournalData.CurrentRow.Cells["Broj naloga za proizvodnju"].Value.ToString();
                 string lineNo = dgvOutpuJournalData.CurrentRow.Cells["Line No_"].Value.ToString();
                 string operationNo = dgvOutpuJournalData.CurrentRow.Cells["broj Operacije"].Value.ToString();
+                string itemNo = dgvOutpuJournalData.CurrentRow.Cells["broj artikla"].Value.ToString();
+
+                //nadji ko je radio i vrati broj ukupnih cekiranja
+                double ukupnoCekirani = KoJeJosRadio(prodOrderNo, itemNo, operationNo);
                 ucitajProdOrderRoutingLine(prodOrderNo, lineNo, operationNo);
 
-                IzracunajVreme();
+                IzracunajVreme(ukupnoCekirani);
+               
             }
         }
 
-        private double IzracunajUkupnoVreme(string radnik)
+        private double KoJeJosRadio(string prodOrderNo, string itemNo, string operationNo)
+        {
+            DateTime datumOd = new DateTime(dtpOJDod.Value.Year, dtpOJDod.Value.Month, dtpOJDod.Value.Day);
+            DateTime datumDo = new DateTime(dtpOJDdo.Value.Year, dtpOJDdo.Value.Month, dtpOJDdo.Value.Day);
+
+            string qSelect = "SELECT distinct dbo.[Stirg Produkcija$Resource].No_, dbo.[Stirg Produkcija$Resource].Name, " +
+                "sum(dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity]) as [Izlazna količina], dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] " +
+                "FROM            dbo.[Stirg Produkcija$Output Journal Data] INNER JOIN   dbo.[Stirg Produkcija$Resource] ON " +
+                "dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = dbo.[Stirg Produkcija$Resource].No_ " +
+                "WHERE(dbo.[Stirg Produkcija$Output Journal Data].[Item No_] = N'" + itemNo + "') AND(dbo.[Stirg Produkcija$Output Journal Data].[Prod_ Order No_] = N'" + prodOrderNo + "') AND" +
+                " (dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = N'" + operationNo + "') " +
+                " AND(DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0)";
+
+
+            if (cbPeriodOJD.Checked)
+            {
+                qSelect += " and (    dbo.[Stirg Produkcija$Output Journal Data].[Posting Date]>= CONVERT(DATETIME, '" + datumOd.Year + "-" + datumOd.Month + "-" + datumOd.Day + " 00:00:00', 102))" +
+                     " and (   dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] <= CONVERT(DATETIME, '" + datumDo.Year + "-" + datumDo.Month + "-" + datumDo.Day + " 23:59:59', 102)) ";
+            }
+
+            qSelect += " GROUP BY  dbo.[Stirg Produkcija$Resource].Name,dbo.[Stirg Produkcija$Resource].No_, dbo.[Stirg Produkcija$Output Journal Data].[Posting Date]" +
+                " ORDER BY dbo.[Stirg Produkcija$Resource].No_";
+            dgvRadiciDodatni.DataSource = metode.DB.baza_upit(qSelect);
+            dgvRadiciDodatni.Columns["Izlazna količina"].DefaultCellStyle.Format = "N2";
+            lblCekiraniRadnici.Text = dgvRadiciDodatni.Rows.Count.ToString();
+
+            return dgvRadiciDodatni.Rows.Count;
+        }
+
+        //private double KoJeJosRadio(string prodOrderNo, string itemNo, string operationNo)
+        //{
+        //    DateTime datumOd = new DateTime(dtpOJDod.Value.Year, dtpOJDod.Value.Month, dtpOJDod.Value.Day);
+        //    DateTime datumDo = new DateTime(dtpOJDdo.Value.Year, dtpOJDdo.Value.Month, dtpOJDdo.Value.Day);
+
+        //    string qSelect = "SELECT        [Resource No_],dbo.[Stirg Produkcija$Resource].Name, [Prod_ Order No_], [Item No_], [Operation No_], [Posting Date], CONVERT(char(5), [Starting Time], 108) AS pocetak," +
+        //        " CONVERT(char(5), [Ending Time], 108) AS kraj, [Output Quantity] as [Izlazna količina] " +
+        //        "FROM            dbo.[Stirg Produkcija$Output Journal Data] INNER JOIN   dbo.[Stirg Produkcija$Resource] ON " +
+        //        "dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = dbo.[Stirg Produkcija$Resource].No_ " +
+        //        "WHERE(dbo.[Stirg Produkcija$Output Journal Data].[Item No_] = N'" + itemNo + "') AND(dbo.[Stirg Produkcija$Output Journal Data].[Prod_ Order No_] = N'" + prodOrderNo + "') AND" +
+        //        " (dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = N'" + operationNo + "') " +
+        //        " AND(DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0)";
+
+
+        //    if (cbPeriodOJD.Checked)
+        //    {
+        //        qSelect += " and (    dbo.[Stirg Produkcija$Output Journal Data].[Posting Date]>= CONVERT(DATETIME, '" + datumOd.Year + "-" + datumOd.Month + "-" + datumOd.Day + " 00:00:00', 102))" +
+        //             " and (   dbo.[Stirg Produkcija$Output Journal Data].[Posting Date] <= CONVERT(DATETIME, '" + datumDo.Year + "-" + datumDo.Month + "-" + datumDo.Day + " 23:59:59', 102)) ";
+        //    }
+
+        //    qSelect += " ORDER BY dbo.[Stirg Produkcija$Resource].No_";
+        //    dgvRadiciDodatni.DataSource = metode.DB.baza_upit(qSelect);
+        //    dgvRadiciDodatni.Columns["Izlazna količina"].DefaultCellStyle.Format = "N2";
+        //    lblCekiraniRadnici.Text = dgvRadiciDodatni.Rows.Count.ToString();
+
+        //    return dgvRadiciDodatni.Rows.Count;
+        //}
+
+        private double IzracunajUkupnoVreme(string radnik,string nulaJedan)
         {
             //string qSelect = "SELECT DISTINCT    TOP(100) PERCENT dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] AS[Izlazna količina], dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity] AS[Količina škarta], "+
             //            " dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time], dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time],  " +
             //              "  dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time] + (dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] + dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity])  " +
             //           "     * dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]  AS potrebnoVreme " +
-            //             
-            string qSelect = "SELECT       isnull( SUM(dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time] + (dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] + dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity]) " +
-                           "     * dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]),0) AS potrebnoVreme"+
-                            " FROM dbo.[Stirg Produkcija$Output Journal Data] INNER JOIN " +
+            //      
+            string qSelect = "";
+            if (nulaJedan == ">") qSelect += "SELECT       isnull( SUM(dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time] + (dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] + dbo.[Stirg Produkcija$Output Journal Data].[Scrap Quantity]) " +
+                              "     * dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]),0) AS potrebnoVreme";
+
+            else qSelect += "SELECT        ISNULL(SUM(dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time] + dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time] *" +
+                    " (dbo.[Stirg Produkcija$Prod_ Order Line].Quantity-  dbo.[Stirg Produkcija$Prod_ Order Line].[Finished Quantity] - dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity])), 0) AS potrebnoVreme";
+          
+                    //"SELECT       isnull( SUM(dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Setup Time] +  dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]),0) AS potrebnoVreme";
+
+
+            qSelect += " FROM dbo.[Stirg Produkcija$Output Journal Data] INNER JOIN " +
                           "  dbo.[Stirg Produkcija$Resource] ON dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = dbo.[Stirg Produkcija$Resource].No_ INNER JOIN " +
                       "      dbo.[Stirg Produkcija$Prod_ Order Line] ON dbo.[Stirg Produkcija$Output Journal Data].[Item No_] = dbo.[Stirg Produkcija$Prod_ Order Line].[Item No_] AND " +
                        "     dbo.[Stirg Produkcija$Output Journal Data].[Prod_ Order No_] = dbo.[Stirg Produkcija$Prod_ Order Line].[Prod_ Order No_] INNER JOIN " +
                        "     dbo.[Stirg Produkcija$Prod_ Order Routing Line] ON dbo.[Stirg Produkcija$Prod_ Order Line].[Prod_ Order No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Prod_ Order No_] AND " +
                         "    dbo.[Stirg Produkcija$Prod_ Order Line].[Line No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Routing Reference No_] AND " +
-                        "    dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Operation No_] "+
-            " WHERE    (dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = N'" + radnik + "') AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) ";
+                        "    dbo.[Stirg Produkcija$Output Journal Data].[Operation No_] = dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Operation No_] " +
+            " WHERE    (dbo.[Stirg Produkcija$Output Journal Data].[Resource No_] = N'" + radnik + "') AND (DATEDIFF(minute, dbo.[Stirg Produkcija$Output Journal Data].[Starting Time], dbo.[Stirg Produkcija$Output Journal Data].[Ending Time]) >= 0) " +
+            "AND  (dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] " + nulaJedan + " 0)";
 
+            if (nulaJedan == "=")
+                qSelect +=  " and dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]>="+granicnoVreme+" ";
 
-            qSelect = PrimeniFiltere(qSelect);
+                qSelect = PrimeniFiltere(qSelect);
 
             DataTable dt = metode.DB.baza_upit(qSelect);
 
@@ -367,7 +463,7 @@ namespace SM_PracenjeRadnika
             }
         }
 
-        private void IzracunajVreme()
+        private double IzracunajVreme(double ukupnoCekirani)
         {
             if (dgvProdOrderRoutingLine.CurrentRow != null)
             {
@@ -378,7 +474,87 @@ namespace SM_PracenjeRadnika
                 double skart = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["količina škarta"].Value.ToString());
                 double predvidjenoVremePoKomadu = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme izvođenja"].Value.ToString());
                 double vremePodesavanja = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme podešavanja"].Value.ToString());
+                double narucenaKolicina = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["Naručena količina"].Value.ToString());
+                double uradjenaKolicina = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["urađena količina"].Value.ToString());
+                double radnikUpunoCekirao = 0;
 
+                //pronadji koilko puta je radio
+                foreach (DataGridViewRow row in dgvRadiciDodatni.Rows)
+                {
+                    if (row.Cells[0].Value.ToString().Equals(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString()))
+                    {
+                        radnikUpunoCekirao++;
+                    }
+                }
+                if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
+                    predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
+                if (uradjeno >= 0)
+                {
+                    tbUtrosenoVreme.Text = utrosenoVreme.ToString();
+                    tbIzlaznaKolicina.Text = uradjeno.ToString();
+                    tbSkart.Text = skart.ToString();
+
+                    predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
+                    tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
+
+                    procenat = predvidjenoVreme * 100 / utrosenoVreme;
+                    tbProcenat.Text = procenat.ToString("##.##") + "%";
+                    gbOdradjeno.Visible = true;
+                    gbPredvidjenoVreme.Visible = false;
+                    return 0;
+                }
+                else
+                {
+                    //proveri da li ima odradjenih komada
+                    double uradjenoOdOstalihRadnika = 0;
+                    foreach(DataGridViewRow r in dgvRadiciDodatni.Rows)
+                    {
+                        uradjenoOdOstalihRadnika+= double.Parse(r.Cells["izlazna količina"].Value.ToString());
+                    }
+                    if (predvidjenoVremePoKomadu > 119)
+                    {
+                        tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
+                        predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (narucenaKolicina - uradjenaKolicina - uradjeno);
+                        predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
+                        tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+                        gbPredvidjenoVreme.Visible = true;
+                        gbOdradjeno.Visible = false;
+                        return predvidjenoVreme;
+                    }
+                    else
+                    {
+                        gbPredvidjenoVreme.Visible = false;
+                        gbOdradjeno.Visible = false;
+                        return 0;
+                    }
+                }
+            }
+            else return 0;
+        }
+
+        private double IzracunajVreme(double ukupnoCekirani,DataGridViewRow r)
+        {
+            if (dgvProdOrderRoutingLine.CurrentRow != null)
+            {
+                double utrosenoVreme = double.Parse(r.Cells["stvarno Trajanje"].Value.ToString());
+                double predvidjenoVreme = 0;
+                double procenat = 0;
+                double uradjeno = double.Parse(r.Cells["izlazna količina"].Value.ToString());
+                double skart = double.Parse(r.Cells["količina škarta"].Value.ToString());
+                double predvidjenoVremePoKomadu = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme izvođenja"].Value.ToString());
+                double vremePodesavanja = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme podešavanja"].Value.ToString());
+                double narucenaKolicina = double.Parse(r.Cells["Naručena količina"].Value.ToString());
+                double uradjenaKolicina = double.Parse(r.Cells["urađena količina"].Value.ToString());
+                double radnikUpunoCekirao = 0;
+
+                //pronadji koilko puta je radio
+                foreach (DataGridViewRow row in dgvRadiciDodatni.Rows)
+                {
+                    if (row.Cells[0].Value.ToString().Equals(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString()))
+                    {
+                        radnikUpunoCekirao++;
+                    }
+                }
                 if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
                     predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
                 if (uradjeno > 0)
@@ -394,33 +570,55 @@ namespace SM_PracenjeRadnika
                     tbProcenat.Text = procenat.ToString("##.##") + "%";
                     gbOdradjeno.Visible = true;
                     gbPredvidjenoVreme.Visible = false;
+                    return 0;
                 }
                 else
                 {
-                    tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
-                    predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu;
-                    tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
-                    gbPredvidjenoVreme.Visible = true;
-                    gbOdradjeno.Visible = false;
+                    if (predvidjenoVremePoKomadu > 119)
+                    {
+                        tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
+                        predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (narucenaKolicina - uradjenaKolicina - uradjeno);
+                        predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
+                        tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+                        gbPredvidjenoVreme.Visible = true;
+                        gbOdradjeno.Visible = false;
+                        return predvidjenoVreme;
+                    }
+                    else
+                    {
+                        gbPredvidjenoVreme.Visible = false;
+                        gbOdradjeno.Visible = false;
+                        return 0;
+                    }
                 }
             }
+            else return 0;
         }
 
         private void UcitajIskoriscenost(string IdRadnik)
         {
             double ukupnoUtroseno = 0;
-            double ukupnoPredvidjeno = IzracunajUkupnoVreme(IdRadnik);
+            double ukupnoUtrosenoNula = 0;
+            double ukupnoPredvidjeno = IzracunajUkupnoVreme(IdRadnik,">");
             double ukupnoUtrosenoSat = 0;
-            double ukupnoPredvidjenoSat = IzracunajUkupnoVreme(IdRadnik);
+            double ukupnoPredvidjenoNula = IzracunajUkupnoVreme(IdRadnik,"=");
             double ostatakMinuti = 0;
             double procenat = 0;
             if (dgvOutpuJournalData.Rows.Count > 0)
             {
                 foreach (DataGridViewRow r in dgvOutpuJournalData.Rows)
                 {
-                    ukupnoUtroseno += double.Parse(r.Cells["stvarno trajanje"].Value.ToString());
-
+                    if (double.Parse(r.Cells["Izlazna količina"].Value.ToString())>0)
+                    { 
+                        ukupnoUtroseno += double.Parse(r.Cells["stvarno trajanje"].Value.ToString());
+                    }
+                    else
+                    {
+                        if (double.Parse(r.Cells["run time"].Value.ToString())>=granicnoVreme)
+                        ukupnoUtrosenoNula += double.Parse(r.Cells["stvarno trajanje"].Value.ToString());
+                    }
                 }
+                #region odradjeno
                 //u min
                 tbUkupnoPredvidjenoVreme.Text = ukupnoPredvidjeno.ToString("##.##") + "min";
                 tbUkupnoUtrosenoVreme.Text = ukupnoUtroseno.ToString("##.##") + "min";
@@ -435,7 +633,24 @@ namespace SM_PracenjeRadnika
                 ostatakMinuti = ukupnoPredvidjeno % 60;
                 double vremeUStaimaPredvidjeno= Math.Floor(ukupnoPredvidjeno / 60) + ostatakMinuti / 60;
                 tbUkupnoPredvidjenoVremeSati.Text = vremeUStaimaPredvidjeno.ToString("##.##")+"h";
+                #endregion
 
+                #region u toku
+
+                //if (ukupnoPredvidjenoNula == 0)
+                //    ukupnoUtrosenoNula = 0;
+                tbUkupnoUtrosenoVremeNula.Text = ukupnoUtrosenoNula.ToString("##.##") + "min";
+                tbUkupnoPredvidjenoVremeNula.Text = ukupnoPredvidjenoNula.ToString("##.##") + "min";
+
+                //u satima
+                ostatakMinuti = ukupnoUtrosenoNula % 60;
+                double vremeUStaimaUtrosenoNula = Math.Floor(ukupnoUtrosenoNula / 60) + ostatakMinuti / 60;
+                tbUkupnoUtrosenoVremeSatiNula.Text = vremeUStaimaUtrosenoNula.ToString("##.##") + "h";
+
+                ostatakMinuti = ukupnoPredvidjenoNula % 60;
+                double vremeUStaimaPredvidjenoNula = Math.Floor(ukupnoPredvidjenoNula / 60) + ostatakMinuti / 60;
+                tbUkupnoPredvidjenoVremeSatiNula.Text = vremeUStaimaPredvidjenoNula.ToString("##.##") + "h";
+                #endregion
             }
             else
             {
@@ -466,6 +681,19 @@ namespace SM_PracenjeRadnika
         private void dgvOutpuJournalData_MouseEnter(object sender, EventArgs e)
         {
             dgvOutpuJournalData.Focus();
+        }
+
+        private void dgvOutpuJournalData_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+           
+            if (dgvOutpuJournalData.CurrentRow != null)
+            {
+                if(dgvOutpuJournalData.Columns[dgvOutpuJournalData.CurrentCell.ColumnIndex].Name=="Broj naloga za proizvodnju")
+                    cbProdOrderNo.Text = dgvOutpuJournalData.CurrentCell.Value.ToString();
+
+                if (dgvOutpuJournalData.Columns[dgvOutpuJournalData.CurrentCell.ColumnIndex].Name == "Broj artikla")
+                    cbItemNo.Text = dgvOutpuJournalData.CurrentCell.Value.ToString();
+            }
         }
     }
 }

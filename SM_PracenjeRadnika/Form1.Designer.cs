@@ -41,14 +41,22 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.gbPredvidjenoVremeUkupno = new System.Windows.Forms.GroupBox();
+            this.tbUkupnoPredvidjenoVremeSatiNula = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tbUkupnoUtrosenoVremeSatiNula = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tbUkupnoUtrosenoVremeNula = new System.Windows.Forms.TextBox();
+            this.tbUkupnoPredvidjenoVremeNula = new System.Windows.Forms.TextBox();
+            this.gbOdradjenoUkupno = new System.Windows.Forms.GroupBox();
             this.tbUkupnoPredvidjenoVremeSati = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.tbUkupnoUtrosenoVremeSati = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.tbUkupnoProcenat = new System.Windows.Forms.TextBox();
+            this.tbUkupnoUtrosenoVreme = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tbUkupnoPredvidjenoVreme = new System.Windows.Forms.TextBox();
-            this.tbUkupnoUtrosenoVreme = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.lblRadnici = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvRadnici = new System.Windows.Forms.DataGridView();
@@ -60,6 +68,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.lblCekiraniRadnici = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.dgvRadiciDodatni = new System.Windows.Forms.DataGridView();
             this.gbPredvidjenoVreme = new System.Windows.Forms.GroupBox();
             this.label18 = new System.Windows.Forms.Label();
             this.tbPredvidjenoVremePoKomadu = new System.Windows.Forms.TextBox();
@@ -93,8 +104,7 @@
             this.cbRadnik = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cbProdOrderNo = new System.Windows.Forms.ComboBox();
-            this.gbOdradjenoUkupno = new System.Windows.Forms.GroupBox();
-            this.gbPredvidjenoVremeUkupno = new System.Windows.Forms.GroupBox();
+            this.gpKontejner = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -105,6 +115,8 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.gbPredvidjenoVremeUkupno.SuspendLayout();
+            this.gbOdradjenoUkupno.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRadnici)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProdOrderRoutingLine)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOutpuJournalData)).BeginInit();
@@ -112,10 +124,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).BeginInit();
             this.gbPredvidjenoVreme.SuspendLayout();
             this.gbOdradjeno.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.gbOdradjenoUkupno.SuspendLayout();
+            this.gpKontejner.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -127,7 +140,7 @@
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Location = new System.Drawing.Point(1, 1);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1184, 761);
+            this.groupBox1.Size = new System.Drawing.Size(1196, 761);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -146,8 +159,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Size = new System.Drawing.Size(1171, 634);
-            this.splitContainer1.SplitterDistance = 817;
+            this.splitContainer1.Size = new System.Drawing.Size(1183, 634);
+            this.splitContainer1.SplitterDistance = 824;
             this.splitContainer1.TabIndex = 10;
             // 
             // panel1
@@ -158,7 +171,7 @@
             this.panel1.Controls.Add(this.splitContainer3);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(811, 623);
+            this.panel1.Size = new System.Drawing.Size(818, 623);
             this.panel1.TabIndex = 8;
             // 
             // splitContainer3
@@ -187,9 +200,86 @@
             this.splitContainer3.Panel2.Controls.Add(this.dgvProdOrderRoutingLine);
             this.splitContainer3.Panel2.Controls.Add(this.dgvOutpuJournalData);
             this.splitContainer3.Panel2.Controls.Add(this.label5);
-            this.splitContainer3.Size = new System.Drawing.Size(810, 628);
-            this.splitContainer3.SplitterDistance = 310;
+            this.splitContainer3.Size = new System.Drawing.Size(818, 628);
+            this.splitContainer3.SplitterDistance = 309;
             this.splitContainer3.TabIndex = 5;
+            // 
+            // gbPredvidjenoVremeUkupno
+            // 
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoPredvidjenoVremeSatiNula);
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.label19);
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoUtrosenoVremeSatiNula);
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.label20);
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoUtrosenoVremeNula);
+            this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoPredvidjenoVremeNula);
+            this.gbPredvidjenoVremeUkupno.Location = new System.Drawing.Point(538, 16);
+            this.gbPredvidjenoVremeUkupno.Name = "gbPredvidjenoVremeUkupno";
+            this.gbPredvidjenoVremeUkupno.Size = new System.Drawing.Size(253, 113);
+            this.gbPredvidjenoVremeUkupno.TabIndex = 19;
+            this.gbPredvidjenoVremeUkupno.TabStop = false;
+            this.gbPredvidjenoVremeUkupno.Text = "U toku";
+            // 
+            // tbUkupnoPredvidjenoVremeSatiNula
+            // 
+            this.tbUkupnoPredvidjenoVremeSatiNula.Location = new System.Drawing.Point(183, 48);
+            this.tbUkupnoPredvidjenoVremeSatiNula.Name = "tbUkupnoPredvidjenoVremeSatiNula";
+            this.tbUkupnoPredvidjenoVremeSatiNula.Size = new System.Drawing.Size(66, 20);
+            this.tbUkupnoPredvidjenoVremeSatiNula.TabIndex = 23;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(9, 20);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(82, 13);
+            this.label19.TabIndex = 18;
+            this.label19.Text = "Utrošeno vreme";
+            // 
+            // tbUkupnoUtrosenoVremeSatiNula
+            // 
+            this.tbUkupnoUtrosenoVremeSatiNula.Location = new System.Drawing.Point(183, 17);
+            this.tbUkupnoUtrosenoVremeSatiNula.Name = "tbUkupnoUtrosenoVremeSatiNula";
+            this.tbUkupnoUtrosenoVremeSatiNula.Size = new System.Drawing.Size(66, 20);
+            this.tbUkupnoUtrosenoVremeSatiNula.TabIndex = 22;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(9, 48);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(94, 13);
+            this.label20.TabIndex = 19;
+            this.label20.Text = "Predviđeno vreme";
+            // 
+            // tbUkupnoUtrosenoVremeNula
+            // 
+            this.tbUkupnoUtrosenoVremeNula.Location = new System.Drawing.Point(105, 17);
+            this.tbUkupnoUtrosenoVremeNula.Name = "tbUkupnoUtrosenoVremeNula";
+            this.tbUkupnoUtrosenoVremeNula.Size = new System.Drawing.Size(66, 20);
+            this.tbUkupnoUtrosenoVremeNula.TabIndex = 20;
+            // 
+            // tbUkupnoPredvidjenoVremeNula
+            // 
+            this.tbUkupnoPredvidjenoVremeNula.Location = new System.Drawing.Point(105, 48);
+            this.tbUkupnoPredvidjenoVremeNula.Name = "tbUkupnoPredvidjenoVremeNula";
+            this.tbUkupnoPredvidjenoVremeNula.Size = new System.Drawing.Size(66, 20);
+            this.tbUkupnoPredvidjenoVremeNula.TabIndex = 21;
+            // 
+            // gbOdradjenoUkupno
+            // 
+            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoPredvidjenoVremeSati);
+            this.gbOdradjenoUkupno.Controls.Add(this.label17);
+            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoUtrosenoVremeSati);
+            this.gbOdradjenoUkupno.Controls.Add(this.label16);
+            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoProcenat);
+            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoUtrosenoVreme);
+            this.gbOdradjenoUkupno.Controls.Add(this.label11);
+            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoPredvidjenoVreme);
+            this.gbOdradjenoUkupno.Location = new System.Drawing.Point(275, 16);
+            this.gbOdradjenoUkupno.Name = "gbOdradjenoUkupno";
+            this.gbOdradjenoUkupno.Size = new System.Drawing.Size(257, 113);
+            this.gbOdradjenoUkupno.TabIndex = 18;
+            this.gbOdradjenoUkupno.TabStop = false;
             // 
             // tbUkupnoPredvidjenoVremeSati
             // 
@@ -198,6 +288,15 @@
             this.tbUkupnoPredvidjenoVremeSati.Size = new System.Drawing.Size(66, 20);
             this.tbUkupnoPredvidjenoVremeSati.TabIndex = 17;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(9, 20);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(82, 13);
+            this.label17.TabIndex = 10;
+            this.label17.Text = "Utrošeno vreme";
+            // 
             // tbUkupnoUtrosenoVremeSati
             // 
             this.tbUkupnoUtrosenoVremeSati.Location = new System.Drawing.Point(183, 17);
@@ -205,12 +304,28 @@
             this.tbUkupnoUtrosenoVremeSati.Size = new System.Drawing.Size(66, 20);
             this.tbUkupnoUtrosenoVremeSati.TabIndex = 16;
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(9, 48);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(94, 13);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "Predviđeno vreme";
+            // 
             // tbUkupnoProcenat
             // 
             this.tbUkupnoProcenat.Location = new System.Drawing.Point(105, 74);
             this.tbUkupnoProcenat.Name = "tbUkupnoProcenat";
             this.tbUkupnoProcenat.Size = new System.Drawing.Size(66, 20);
             this.tbUkupnoProcenat.TabIndex = 15;
+            // 
+            // tbUkupnoUtrosenoVreme
+            // 
+            this.tbUkupnoUtrosenoVreme.Location = new System.Drawing.Point(105, 17);
+            this.tbUkupnoUtrosenoVreme.Name = "tbUkupnoUtrosenoVreme";
+            this.tbUkupnoUtrosenoVreme.Size = new System.Drawing.Size(66, 20);
+            this.tbUkupnoUtrosenoVreme.TabIndex = 12;
             // 
             // label11
             // 
@@ -227,31 +342,6 @@
             this.tbUkupnoPredvidjenoVreme.Name = "tbUkupnoPredvidjenoVreme";
             this.tbUkupnoPredvidjenoVreme.Size = new System.Drawing.Size(66, 20);
             this.tbUkupnoPredvidjenoVreme.TabIndex = 13;
-            // 
-            // tbUkupnoUtrosenoVreme
-            // 
-            this.tbUkupnoUtrosenoVreme.Location = new System.Drawing.Point(105, 17);
-            this.tbUkupnoUtrosenoVreme.Name = "tbUkupnoUtrosenoVreme";
-            this.tbUkupnoUtrosenoVreme.Size = new System.Drawing.Size(66, 20);
-            this.tbUkupnoUtrosenoVreme.TabIndex = 12;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(9, 48);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(94, 13);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Predviđeno vreme";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(9, 20);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(82, 13);
-            this.label17.TabIndex = 10;
-            this.label17.Text = "Utrošeno vreme";
             // 
             // lblRadnici
             // 
@@ -308,7 +398,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvRadnici.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvRadnici.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRadnici.Size = new System.Drawing.Size(266, 290);
+            this.dgvRadnici.Size = new System.Drawing.Size(266, 289);
             this.dgvRadnici.TabIndex = 0;
             this.dgvRadnici.SelectionChanged += new System.EventHandler(this.dgvRadnici_SelectionChanged);
             this.dgvRadnici.Click += new System.EventHandler(this.dgvRadnici_Click);
@@ -378,7 +468,7 @@
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvProdOrderRoutingLine.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvProdOrderRoutingLine.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProdOrderRoutingLine.Size = new System.Drawing.Size(798, 77);
+            this.dgvProdOrderRoutingLine.Size = new System.Drawing.Size(806, 77);
             this.dgvProdOrderRoutingLine.TabIndex = 3;
             // 
             // dgvOutpuJournalData
@@ -417,8 +507,9 @@
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvOutpuJournalData.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgvOutpuJournalData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOutpuJournalData.Size = new System.Drawing.Size(798, 185);
+            this.dgvOutpuJournalData.Size = new System.Drawing.Size(806, 185);
             this.dgvOutpuJournalData.TabIndex = 4;
+            this.dgvOutpuJournalData.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOutpuJournalData_CellDoubleClick);
             this.dgvOutpuJournalData.SelectionChanged += new System.EventHandler(this.dgvOutpuJournalData_SelectionChanged);
             this.dgvOutpuJournalData.Click += new System.EventHandler(this.dgvOutpuJournalData_Click);
             this.dgvOutpuJournalData.MouseEnter += new System.EventHandler(this.dgvOutpuJournalData_MouseEnter);
@@ -440,7 +531,7 @@
             this.panel2.Controls.Add(this.splitContainer4);
             this.panel2.Location = new System.Drawing.Point(3, 6);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(342, 620);
+            this.panel2.Size = new System.Drawing.Size(346, 620);
             this.panel2.TabIndex = 9;
             // 
             // splitContainer4
@@ -455,11 +546,47 @@
             // 
             // splitContainer4.Panel2
             // 
-            this.splitContainer4.Panel2.Controls.Add(this.gbPredvidjenoVreme);
-            this.splitContainer4.Panel2.Controls.Add(this.gbOdradjeno);
-            this.splitContainer4.Size = new System.Drawing.Size(344, 636);
-            this.splitContainer4.SplitterDistance = 313;
+            this.splitContainer4.Panel2.Controls.Add(this.gpKontejner);
+            this.splitContainer4.Panel2.Controls.Add(this.lblCekiraniRadnici);
+            this.splitContainer4.Panel2.Controls.Add(this.label21);
+            this.splitContainer4.Panel2.Controls.Add(this.dgvRadiciDodatni);
+            this.splitContainer4.Size = new System.Drawing.Size(348, 636);
+            this.splitContainer4.SplitterDistance = 312;
             this.splitContainer4.TabIndex = 7;
+            // 
+            // lblCekiraniRadnici
+            // 
+            this.lblCekiraniRadnici.AutoSize = true;
+            this.lblCekiraniRadnici.Location = new System.Drawing.Point(87, 156);
+            this.lblCekiraniRadnici.Name = "lblCekiraniRadnici";
+            this.lblCekiraniRadnici.Size = new System.Drawing.Size(0, 13);
+            this.lblCekiraniRadnici.TabIndex = 14;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(7, 156);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(79, 13);
+            this.label21.TabIndex = 13;
+            this.label21.Text = "Cekirani radnici";
+            // 
+            // dgvRadiciDodatni
+            // 
+            this.dgvRadiciDodatni.AllowUserToAddRows = false;
+            this.dgvRadiciDodatni.AllowUserToDeleteRows = false;
+            this.dgvRadiciDodatni.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvRadiciDodatni.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvRadiciDodatni.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvRadiciDodatni.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRadiciDodatni.Location = new System.Drawing.Point(10, 172);
+            this.dgvRadiciDodatni.Name = "dgvRadiciDodatni";
+            this.dgvRadiciDodatni.ReadOnly = true;
+            this.dgvRadiciDodatni.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRadiciDodatni.Size = new System.Drawing.Size(337, 135);
+            this.dgvRadiciDodatni.TabIndex = 12;
             // 
             // gbPredvidjenoVreme
             // 
@@ -467,11 +594,11 @@
             this.gbPredvidjenoVreme.Controls.Add(this.tbPredvidjenoVremePoKomadu);
             this.gbPredvidjenoVreme.Controls.Add(this.label22);
             this.gbPredvidjenoVreme.Controls.Add(this.tbUtrosenoVremeNula);
-            this.gbPredvidjenoVreme.Location = new System.Drawing.Point(176, 2);
-            this.gbPredvidjenoVreme.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbPredvidjenoVreme.Location = new System.Drawing.Point(172, 5);
+            this.gbPredvidjenoVreme.Margin = new System.Windows.Forms.Padding(2);
             this.gbPredvidjenoVreme.Name = "gbPredvidjenoVreme";
-            this.gbPredvidjenoVreme.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.gbPredvidjenoVreme.Size = new System.Drawing.Size(170, 145);
+            this.gbPredvidjenoVreme.Padding = new System.Windows.Forms.Padding(2);
+            this.gbPredvidjenoVreme.Size = new System.Drawing.Size(167, 145);
             this.gbPredvidjenoVreme.TabIndex = 11;
             this.gbPredvidjenoVreme.TabStop = false;
             this.gbPredvidjenoVreme.Text = "Predvidjeno vreme";
@@ -488,7 +615,7 @@
             // 
             // tbPredvidjenoVremePoKomadu
             // 
-            this.tbPredvidjenoVremePoKomadu.Location = new System.Drawing.Point(112, 95);
+            this.tbPredvidjenoVremePoKomadu.Location = new System.Drawing.Point(105, 42);
             this.tbPredvidjenoVremePoKomadu.Name = "tbPredvidjenoVremePoKomadu";
             this.tbPredvidjenoVremePoKomadu.Size = new System.Drawing.Size(52, 20);
             this.tbPredvidjenoVremePoKomadu.TabIndex = 7;
@@ -496,7 +623,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(5, 95);
+            this.label22.Location = new System.Drawing.Point(5, 42);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(94, 13);
             this.label22.TabIndex = 3;
@@ -504,7 +631,7 @@
             // 
             // tbUtrosenoVremeNula
             // 
-            this.tbUtrosenoVremeNula.Location = new System.Drawing.Point(112, 12);
+            this.tbUtrosenoVremeNula.Location = new System.Drawing.Point(105, 12);
             this.tbUtrosenoVremeNula.Name = "tbUtrosenoVremeNula";
             this.tbUtrosenoVremeNula.Size = new System.Drawing.Size(52, 20);
             this.tbUtrosenoVremeNula.TabIndex = 4;
@@ -521,11 +648,11 @@
             this.gbOdradjeno.Controls.Add(this.tbSkart);
             this.gbOdradjeno.Controls.Add(this.tbUtrosenoVreme);
             this.gbOdradjeno.Controls.Add(this.tbIzlaznaKolicina);
-            this.gbOdradjeno.Location = new System.Drawing.Point(2, 2);
-            this.gbOdradjeno.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbOdradjeno.Location = new System.Drawing.Point(5, 5);
+            this.gbOdradjeno.Margin = new System.Windows.Forms.Padding(2);
             this.gbOdradjeno.Name = "gbOdradjeno";
-            this.gbOdradjeno.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.gbOdradjeno.Size = new System.Drawing.Size(170, 145);
+            this.gbOdradjeno.Padding = new System.Windows.Forms.Padding(2);
+            this.gbOdradjeno.Size = new System.Drawing.Size(162, 145);
             this.gbOdradjeno.TabIndex = 10;
             this.gbOdradjeno.TabStop = false;
             this.gbOdradjeno.Visible = false;
@@ -541,7 +668,7 @@
             // 
             // tbProcenat
             // 
-            this.tbProcenat.Location = new System.Drawing.Point(112, 121);
+            this.tbProcenat.Location = new System.Drawing.Point(105, 121);
             this.tbProcenat.Name = "tbProcenat";
             this.tbProcenat.Size = new System.Drawing.Size(52, 20);
             this.tbProcenat.TabIndex = 9;
@@ -575,7 +702,7 @@
             // 
             // tbPredvidjenoVreme
             // 
-            this.tbPredvidjenoVreme.Location = new System.Drawing.Point(112, 95);
+            this.tbPredvidjenoVreme.Location = new System.Drawing.Point(105, 95);
             this.tbPredvidjenoVreme.Name = "tbPredvidjenoVreme";
             this.tbPredvidjenoVreme.Size = new System.Drawing.Size(52, 20);
             this.tbPredvidjenoVreme.TabIndex = 7;
@@ -591,21 +718,21 @@
             // 
             // tbSkart
             // 
-            this.tbSkart.Location = new System.Drawing.Point(112, 68);
+            this.tbSkart.Location = new System.Drawing.Point(105, 68);
             this.tbSkart.Name = "tbSkart";
             this.tbSkart.Size = new System.Drawing.Size(52, 20);
             this.tbSkart.TabIndex = 6;
             // 
             // tbUtrosenoVreme
             // 
-            this.tbUtrosenoVreme.Location = new System.Drawing.Point(112, 12);
+            this.tbUtrosenoVreme.Location = new System.Drawing.Point(105, 12);
             this.tbUtrosenoVreme.Name = "tbUtrosenoVreme";
             this.tbUtrosenoVreme.Size = new System.Drawing.Size(52, 20);
             this.tbUtrosenoVreme.TabIndex = 4;
             // 
             // tbIzlaznaKolicina
             // 
-            this.tbIzlaznaKolicina.Location = new System.Drawing.Point(112, 42);
+            this.tbIzlaznaKolicina.Location = new System.Drawing.Point(105, 42);
             this.tbIzlaznaKolicina.Name = "tbIzlaznaKolicina";
             this.tbIzlaznaKolicina.Size = new System.Drawing.Size(52, 20);
             this.tbIzlaznaKolicina.TabIndex = 5;
@@ -633,14 +760,14 @@
             this.groupBox3.Controls.Add(this.cbProdOrderNo);
             this.groupBox3.Location = new System.Drawing.Point(0, 11);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(1178, 104);
+            this.groupBox3.Size = new System.Drawing.Size(1190, 104);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(183, 64);
+            this.label2.Location = new System.Drawing.Point(2, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 13);
             this.label2.TabIndex = 41;
@@ -651,16 +778,16 @@
             this.cbRadnaGrupa.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cbRadnaGrupa.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbRadnaGrupa.FormattingEnabled = true;
-            this.cbRadnaGrupa.Location = new System.Drawing.Point(183, 77);
+            this.cbRadnaGrupa.Location = new System.Drawing.Point(5, 75);
             this.cbRadnaGrupa.Name = "cbRadnaGrupa";
             this.cbRadnaGrupa.Size = new System.Drawing.Size(171, 21);
             this.cbRadnaGrupa.TabIndex = 40;
             // 
             // btnPronadji
             // 
-            this.btnPronadji.Location = new System.Drawing.Point(755, 77);
+            this.btnPronadji.Location = new System.Drawing.Point(629, 75);
             this.btnPronadji.Name = "btnPronadji";
-            this.btnPronadji.Size = new System.Drawing.Size(75, 23);
+            this.btnPronadji.Size = new System.Drawing.Size(91, 23);
             this.btnPronadji.TabIndex = 39;
             this.btnPronadji.Text = "Pronadji";
             this.btnPronadji.UseVisualStyleBackColor = true;
@@ -669,7 +796,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(561, 64);
+            this.label15.Location = new System.Drawing.Point(369, 59);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(63, 13);
             this.label15.TabIndex = 38;
@@ -727,7 +854,7 @@
             this.cbRadniCentar.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cbRadniCentar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbRadniCentar.FormattingEnabled = true;
-            this.cbRadniCentar.Location = new System.Drawing.Point(561, 77);
+            this.cbRadniCentar.Location = new System.Drawing.Point(372, 75);
             this.cbRadniCentar.Name = "cbRadniCentar";
             this.cbRadniCentar.Size = new System.Drawing.Size(171, 21);
             this.cbRadniCentar.TabIndex = 35;
@@ -745,7 +872,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(372, 61);
+            this.label13.Location = new System.Drawing.Point(182, 59);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(36, 13);
             this.label13.TabIndex = 31;
@@ -768,7 +895,7 @@
             this.cbRadnik.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cbRadnik.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cbRadnik.FormattingEnabled = true;
-            this.cbRadnik.Location = new System.Drawing.Point(372, 77);
+            this.cbRadnik.Location = new System.Drawing.Point(182, 75);
             this.cbRadnik.Name = "cbRadnik";
             this.cbRadnik.Size = new System.Drawing.Size(171, 21);
             this.cbRadnik.TabIndex = 30;
@@ -792,40 +919,25 @@
             this.cbProdOrderNo.Size = new System.Drawing.Size(171, 21);
             this.cbProdOrderNo.TabIndex = 4;
             // 
-            // gbOdradjenoUkupno
+            // gpKontejner
             // 
-            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoPredvidjenoVremeSati);
-            this.gbOdradjenoUkupno.Controls.Add(this.label17);
-            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoUtrosenoVremeSati);
-            this.gbOdradjenoUkupno.Controls.Add(this.label16);
-            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoProcenat);
-            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoUtrosenoVreme);
-            this.gbOdradjenoUkupno.Controls.Add(this.label11);
-            this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoPredvidjenoVreme);
-            this.gbOdradjenoUkupno.Location = new System.Drawing.Point(275, 16);
-            this.gbOdradjenoUkupno.Name = "gbOdradjenoUkupno";
-            this.gbOdradjenoUkupno.Size = new System.Drawing.Size(257, 113);
-            this.gbOdradjenoUkupno.TabIndex = 18;
-            this.gbOdradjenoUkupno.TabStop = false;
-            // 
-            // gbPredvidjenoVremeUkupno
-            // 
-            this.gbPredvidjenoVremeUkupno.Location = new System.Drawing.Point(538, 16);
-            this.gbPredvidjenoVremeUkupno.Name = "gbPredvidjenoVremeUkupno";
-            this.gbPredvidjenoVremeUkupno.Size = new System.Drawing.Size(253, 113);
-            this.gbPredvidjenoVremeUkupno.TabIndex = 19;
-            this.gbPredvidjenoVremeUkupno.TabStop = false;
-            this.gbPredvidjenoVremeUkupno.Text = "groupBox2";
+            this.gpKontejner.Controls.Add(this.gbPredvidjenoVreme);
+            this.gpKontejner.Controls.Add(this.gbOdradjeno);
+            this.gpKontejner.Location = new System.Drawing.Point(4, 3);
+            this.gpKontejner.Name = "gpKontejner";
+            this.gpKontejner.Size = new System.Drawing.Size(341, 155);
+            this.gpKontejner.TabIndex = 0;
+            this.gpKontejner.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 761);
+            this.ClientSize = new System.Drawing.Size(1196, 761);
             this.Controls.Add(this.groupBox1);
-            this.MinimumSize = new System.Drawing.Size(1200, 800);
+            this.MinimumSize = new System.Drawing.Size(1200, 799);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Praćenje radnika";
             this.groupBox1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -838,21 +950,26 @@
             this.splitContainer3.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            this.gbPredvidjenoVremeUkupno.ResumeLayout(false);
+            this.gbPredvidjenoVremeUkupno.PerformLayout();
+            this.gbOdradjenoUkupno.ResumeLayout(false);
+            this.gbOdradjenoUkupno.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRadnici)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProdOrderRoutingLine)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOutpuJournalData)).EndInit();
             this.panel2.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
+            this.splitContainer4.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).EndInit();
             this.gbPredvidjenoVreme.ResumeLayout(false);
             this.gbPredvidjenoVreme.PerformLayout();
             this.gbOdradjeno.ResumeLayout(false);
             this.gbOdradjeno.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.gbOdradjenoUkupno.ResumeLayout(false);
-            this.gbOdradjenoUkupno.PerformLayout();
+            this.gpKontejner.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -917,6 +1034,16 @@
         private System.Windows.Forms.GroupBox gbOdradjeno;
         private System.Windows.Forms.GroupBox gbPredvidjenoVremeUkupno;
         private System.Windows.Forms.GroupBox gbOdradjenoUkupno;
+        private System.Windows.Forms.TextBox tbUkupnoPredvidjenoVremeSatiNula;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox tbUkupnoUtrosenoVremeSatiNula;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox tbUkupnoUtrosenoVremeNula;
+        private System.Windows.Forms.TextBox tbUkupnoPredvidjenoVremeNula;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.DataGridView dgvRadiciDodatni;
+        private System.Windows.Forms.Label lblCekiraniRadnici;
+        private System.Windows.Forms.GroupBox gpKontejner;
     }
 }
 
