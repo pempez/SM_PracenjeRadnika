@@ -68,9 +68,13 @@
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.lblCekiraniRadnici = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.dgvRadiciDodatni = new System.Windows.Forms.DataGridView();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnObrisi = new System.Windows.Forms.Button();
+            this.dgvRadnikVreme = new System.Windows.Forms.DataGridView();
+            this.btnUnesiVreme = new System.Windows.Forms.Button();
+            this.label23 = new System.Windows.Forms.Label();
+            this.tbVremeRadnik = new System.Windows.Forms.TextBox();
+            this.gpKontejner = new System.Windows.Forms.GroupBox();
             this.gbPredvidjenoVreme = new System.Windows.Forms.GroupBox();
             this.label18 = new System.Windows.Forms.Label();
             this.tbPredvidjenoVremePoKomadu = new System.Windows.Forms.TextBox();
@@ -87,7 +91,11 @@
             this.tbSkart = new System.Windows.Forms.TextBox();
             this.tbUtrosenoVreme = new System.Windows.Forms.TextBox();
             this.tbIzlaznaKolicina = new System.Windows.Forms.TextBox();
+            this.lblCekiraniRadnici = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.dgvRadiciDodatni = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnStampa = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.cbRadnaGrupa = new System.Windows.Forms.ComboBox();
             this.btnPronadji = new System.Windows.Forms.Button();
@@ -104,7 +112,6 @@
             this.cbRadnik = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cbProdOrderNo = new System.Windows.Forms.ComboBox();
-            this.gpKontejner = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -122,13 +129,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvOutpuJournalData)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadnikVreme)).BeginInit();
+            this.gpKontejner.SuspendLayout();
             this.gbPredvidjenoVreme.SuspendLayout();
             this.gbOdradjeno.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.gpKontejner.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -544,6 +554,10 @@
             this.splitContainer4.Name = "splitContainer4";
             this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.groupBox2);
+            // 
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.gpKontejner);
@@ -554,39 +568,85 @@
             this.splitContainer4.SplitterDistance = 312;
             this.splitContainer4.TabIndex = 7;
             // 
-            // lblCekiraniRadnici
+            // groupBox2
             // 
-            this.lblCekiraniRadnici.AutoSize = true;
-            this.lblCekiraniRadnici.Location = new System.Drawing.Point(87, 156);
-            this.lblCekiraniRadnici.Name = "lblCekiraniRadnici";
-            this.lblCekiraniRadnici.Size = new System.Drawing.Size(0, 13);
-            this.lblCekiraniRadnici.TabIndex = 14;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(7, 156);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(79, 13);
-            this.label21.TabIndex = 13;
-            this.label21.Text = "Cekirani radnici";
-            // 
-            // dgvRadiciDodatni
-            // 
-            this.dgvRadiciDodatni.AllowUserToAddRows = false;
-            this.dgvRadiciDodatni.AllowUserToDeleteRows = false;
-            this.dgvRadiciDodatni.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvRadiciDodatni.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dgvRadiciDodatni.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgvRadiciDodatni.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRadiciDodatni.Location = new System.Drawing.Point(10, 172);
-            this.dgvRadiciDodatni.Name = "dgvRadiciDodatni";
-            this.dgvRadiciDodatni.ReadOnly = true;
-            this.dgvRadiciDodatni.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRadiciDodatni.Size = new System.Drawing.Size(337, 135);
-            this.dgvRadiciDodatni.TabIndex = 12;
+            this.groupBox2.Controls.Add(this.btnObrisi);
+            this.groupBox2.Controls.Add(this.dgvRadnikVreme);
+            this.groupBox2.Controls.Add(this.btnUnesiVreme);
+            this.groupBox2.Controls.Add(this.label23);
+            this.groupBox2.Controls.Add(this.tbVremeRadnik);
+            this.groupBox2.Location = new System.Drawing.Point(9, 9);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(333, 284);
+            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Vreme ";
+            // 
+            // btnObrisi
+            // 
+            this.btnObrisi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnObrisi.Location = new System.Drawing.Point(249, 257);
+            this.btnObrisi.Name = "btnObrisi";
+            this.btnObrisi.Size = new System.Drawing.Size(75, 23);
+            this.btnObrisi.TabIndex = 5;
+            this.btnObrisi.Text = "Obrisi";
+            this.btnObrisi.UseVisualStyleBackColor = true;
+            this.btnObrisi.Click += new System.EventHandler(this.btnObrisi_Click);
+            // 
+            // dgvRadnikVreme
+            // 
+            this.dgvRadnikVreme.AllowUserToAddRows = false;
+            this.dgvRadnikVreme.AllowUserToDeleteRows = false;
+            this.dgvRadnikVreme.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvRadnikVreme.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvRadnikVreme.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvRadnikVreme.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRadnikVreme.Location = new System.Drawing.Point(14, 68);
+            this.dgvRadnikVreme.Name = "dgvRadnikVreme";
+            this.dgvRadnikVreme.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRadnikVreme.Size = new System.Drawing.Size(310, 183);
+            this.dgvRadnikVreme.TabIndex = 4;
+            // 
+            // btnUnesiVreme
+            // 
+            this.btnUnesiVreme.Location = new System.Drawing.Point(258, 22);
+            this.btnUnesiVreme.Name = "btnUnesiVreme";
+            this.btnUnesiVreme.Size = new System.Drawing.Size(69, 23);
+            this.btnUnesiVreme.TabIndex = 3;
+            this.btnUnesiVreme.Text = "unesi";
+            this.btnUnesiVreme.UseVisualStyleBackColor = true;
+            this.btnUnesiVreme.Click += new System.EventHandler(this.btnUnesiVreme_Click);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(5, 28);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(143, 13);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Provedeno vreme u firmi(sati)";
+            // 
+            // tbVremeRadnik
+            // 
+            this.tbVremeRadnik.Location = new System.Drawing.Point(165, 24);
+            this.tbVremeRadnik.Name = "tbVremeRadnik";
+            this.tbVremeRadnik.Size = new System.Drawing.Size(87, 20);
+            this.tbVremeRadnik.TabIndex = 0;
+            // 
+            // gpKontejner
+            // 
+            this.gpKontejner.Controls.Add(this.gbPredvidjenoVreme);
+            this.gpKontejner.Controls.Add(this.gbOdradjeno);
+            this.gpKontejner.Location = new System.Drawing.Point(4, 3);
+            this.gpKontejner.Name = "gpKontejner";
+            this.gpKontejner.Size = new System.Drawing.Size(341, 155);
+            this.gpKontejner.TabIndex = 0;
+            this.gpKontejner.TabStop = false;
             // 
             // gbPredvidjenoVreme
             // 
@@ -737,11 +797,46 @@
             this.tbIzlaznaKolicina.Size = new System.Drawing.Size(52, 20);
             this.tbIzlaznaKolicina.TabIndex = 5;
             // 
+            // lblCekiraniRadnici
+            // 
+            this.lblCekiraniRadnici.AutoSize = true;
+            this.lblCekiraniRadnici.Location = new System.Drawing.Point(87, 156);
+            this.lblCekiraniRadnici.Name = "lblCekiraniRadnici";
+            this.lblCekiraniRadnici.Size = new System.Drawing.Size(0, 13);
+            this.lblCekiraniRadnici.TabIndex = 14;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(7, 156);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(79, 13);
+            this.label21.TabIndex = 13;
+            this.label21.Text = "Cekirani radnici";
+            // 
+            // dgvRadiciDodatni
+            // 
+            this.dgvRadiciDodatni.AllowUserToAddRows = false;
+            this.dgvRadiciDodatni.AllowUserToDeleteRows = false;
+            this.dgvRadiciDodatni.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvRadiciDodatni.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvRadiciDodatni.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvRadiciDodatni.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRadiciDodatni.Location = new System.Drawing.Point(10, 172);
+            this.dgvRadiciDodatni.Name = "dgvRadiciDodatni";
+            this.dgvRadiciDodatni.ReadOnly = true;
+            this.dgvRadiciDodatni.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvRadiciDodatni.Size = new System.Drawing.Size(337, 135);
+            this.dgvRadiciDodatni.TabIndex = 12;
+            // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox3.Controls.Add(this.btnStampa);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.cbRadnaGrupa);
             this.groupBox3.Controls.Add(this.btnPronadji);
@@ -763,6 +858,16 @@
             this.groupBox3.Size = new System.Drawing.Size(1190, 104);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
+            // 
+            // btnStampa
+            // 
+            this.btnStampa.Location = new System.Drawing.Point(726, 75);
+            this.btnStampa.Name = "btnStampa";
+            this.btnStampa.Size = new System.Drawing.Size(92, 23);
+            this.btnStampa.TabIndex = 42;
+            this.btnStampa.Text = "Štampaj";
+            this.btnStampa.UseVisualStyleBackColor = true;
+            this.btnStampa.Click += new System.EventHandler(this.btnStampa_Click);
             // 
             // label2
             // 
@@ -919,16 +1024,6 @@
             this.cbProdOrderNo.Size = new System.Drawing.Size(171, 21);
             this.cbProdOrderNo.TabIndex = 4;
             // 
-            // gpKontejner
-            // 
-            this.gpKontejner.Controls.Add(this.gbPredvidjenoVreme);
-            this.gpKontejner.Controls.Add(this.gbOdradjeno);
-            this.gpKontejner.Location = new System.Drawing.Point(4, 3);
-            this.gpKontejner.Name = "gpKontejner";
-            this.gpKontejner.Size = new System.Drawing.Size(341, 155);
-            this.gpKontejner.TabIndex = 0;
-            this.gpKontejner.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -958,18 +1053,22 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvProdOrderRoutingLine)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOutpuJournalData)).EndInit();
             this.panel2.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
             this.splitContainer4.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadnikVreme)).EndInit();
+            this.gpKontejner.ResumeLayout(false);
             this.gbPredvidjenoVreme.ResumeLayout(false);
             this.gbPredvidjenoVreme.PerformLayout();
             this.gbOdradjeno.ResumeLayout(false);
             this.gbOdradjeno.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRadiciDodatni)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.gpKontejner.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1044,6 +1143,13 @@
         private System.Windows.Forms.DataGridView dgvRadiciDodatni;
         private System.Windows.Forms.Label lblCekiraniRadnici;
         private System.Windows.Forms.GroupBox gpKontejner;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnUnesiVreme;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox tbVremeRadnik;
+        private System.Windows.Forms.DataGridView dgvRadnikVreme;
+        private System.Windows.Forms.Button btnStampa;
+        private System.Windows.Forms.Button btnObrisi;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,12 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using System.IO;
+
+using CrystalDecisions.CrystalReports.Engine;
+
 namespace SM_PracenjeRadnika
 {
     public partial class Form1 : Form
     {
-        private static double granicnoVreme = 1;//120
-
+        private static double granicnoVreme = 120;//120
+        ReportDocument ReportDoc;
         public Form1()
         {
             InitializeComponent();
@@ -127,7 +132,7 @@ namespace SM_PracenjeRadnika
             {
                 lblRadnici.Text = dt.Rows.Count.ToString();
                 dgvRadnici.DataSource = dt;
-                dgvRadnici_Click(null, null);
+          //      dgvRadnici_Click(null, null);
 
 
             }
@@ -322,9 +327,22 @@ namespace SM_PracenjeRadnika
                 UcitajIskoriscenost(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString());
 
                 gpKontejner.Visible = false;
-                //ucitaj predvidjeoNula ukupno
+
+                #region ucitaj predvidjeoNula ukupno
                 double ukupnoPredvidjeno = 0;
-                foreach(DataGridViewRow r in dgvOutpuJournalData.Rows)
+                double ukupnoUtroseno = 0;
+                double ukupnoPredvidjenoNula = 0;
+                double ukupnoUtrosenoNula = 0;
+
+
+                ArrayList skup = new ArrayList();
+                string[] uslov = new string[3];
+                string[] uslov1 = new string[3];
+
+                //skup.Add(uslov1);
+
+                int i = 0; 
+                foreach (DataGridViewRow r in dgvOutpuJournalData.Rows)
                 {
                     string prodOrderNo = r.Cells["Broj naloga za proizvodnju"].Value.ToString();
                     string lineNo = r.Cells["Line No_"].Value.ToString();
@@ -335,11 +353,87 @@ namespace SM_PracenjeRadnika
                     double ukupnoCekirani = KoJeJosRadio(prodOrderNo, itemNo, operationNo);
                     ucitajProdOrderRoutingLine(prodOrderNo, lineNo, operationNo);
 
-                   double ukupno= IzracunajVreme(ukupnoCekirani,r);
-                    ukupnoPredvidjeno += ukupno;
+                    uslov[0] = prodOrderNo;
+                    uslov[1] = itemNo;
+                    uslov[2] = operationNo;
+                    bool ima = false;
+                    foreach(string[] s in skup)
+                    {
+                        if(s[0] == prodOrderNo &&s[1]==itemNo&&s[2]==operationNo)
+                        {
+                            ima = true;
+                        }
+                    }
+                    if (!ima)
+                        
+                    {
+                       
+                        double[] rez = IzracunajVreme(ukupnoCekirani, r);
+
+                        if (rez[2] == 1)
+                        {
+                            ukupnoPredvidjeno += rez[0];
+                            ukupnoUtroseno += rez[1];
+                        }
+                        else
+                        {
+                            ukupnoPredvidjenoNula += rez[0];
+                            ukupnoUtrosenoNula += rez[1];
+                        }
+                        skup.Insert(i, new string[3] { prodOrderNo, itemNo, operationNo });
+                        i++;
+                    }
+
+
                 }
+                skup.Clear();
+                
+                tbUkupnoPredvidjenoVreme.Text = ukupnoPredvidjeno.ToString();
+                tbUkupnoUtrosenoVreme.Text = ukupnoUtroseno.ToString();
+
+                tbUkupnoPredvidjenoVremeNula.Text = ukupnoPredvidjenoNula.ToString();
+                tbUkupnoUtrosenoVremeNula.Text = ukupnoUtrosenoNula.ToString();
+                #endregion
+
+                #region odradjeno
+                //u min
+                double ostatakMinuti = 0;
+                double procenat = 0;
+                tbUkupnoPredvidjenoVreme.Text = ukupnoPredvidjeno.ToString("##.##") + "min";
+                tbUkupnoUtrosenoVreme.Text = ukupnoUtroseno.ToString("##.##") + "min";
+                procenat = ukupnoPredvidjeno * 100 / ukupnoUtroseno;
+                tbUkupnoProcenat.Text = procenat.ToString("##.##") + "%";
+
+                //u satima
+                ostatakMinuti = ukupnoUtroseno % 60;
+                double vremeUStaimaUtroseno = Math.Floor(ukupnoUtroseno / 60) + ostatakMinuti / 60;
+                tbUkupnoUtrosenoVremeSati.Text = vremeUStaimaUtroseno.ToString("##.##") + "h";
+
+                ostatakMinuti = ukupnoPredvidjeno % 60;
+                double vremeUStaimaPredvidjeno = Math.Floor(ukupnoPredvidjeno / 60) + ostatakMinuti / 60;
+                tbUkupnoPredvidjenoVremeSati.Text = vremeUStaimaPredvidjeno.ToString("##.##") + "h";
+                #endregion
+
+                #region u toku
+                
+                //if (ukupnoPredvidjenoNula == 0)
+                //    ukupnoUtrosenoNula = 0;
+                tbUkupnoUtrosenoVremeNula.Text = ukupnoUtrosenoNula.ToString("##.##") + "min";
+                tbUkupnoPredvidjenoVremeNula.Text = ukupnoPredvidjenoNula.ToString("##.##") + "min";
+
+                //u satima
+                ostatakMinuti = ukupnoUtrosenoNula % 60;
+                double vremeUStaimaUtrosenoNula = Math.Floor(ukupnoUtrosenoNula / 60) + ostatakMinuti / 60;
+                tbUkupnoUtrosenoVremeSatiNula.Text = vremeUStaimaUtrosenoNula.ToString("##.##") + "h";
+
+                ostatakMinuti = ukupnoPredvidjenoNula % 60;
+                double vremeUStaimaPredvidjenoNula = Math.Floor(ukupnoPredvidjenoNula / 60) + ostatakMinuti / 60;
+                tbUkupnoPredvidjenoVremeSatiNula.Text = vremeUStaimaPredvidjenoNula.ToString("##.##") + "h";
+                #endregion
+
                 gpKontejner.Visible = true;
-                tbUkupnoPredvidjenoVremeNula.Text = ukupnoPredvidjeno.ToString();
+                dgvOutpuJournalData_Click(null, null);
+                UcitajRadnikVreme();
             }
         }
 
@@ -356,7 +450,7 @@ namespace SM_PracenjeRadnika
                 double ukupnoCekirani = KoJeJosRadio(prodOrderNo, itemNo, operationNo);
                 ucitajProdOrderRoutingLine(prodOrderNo, lineNo, operationNo);
 
-                IzracunajVreme(ukupnoCekirani);
+                double vreme = IzracunajVreme(ukupnoCekirani);
                
             }
         }
@@ -446,9 +540,9 @@ namespace SM_PracenjeRadnika
             "AND  (dbo.[Stirg Produkcija$Output Journal Data].[Output Quantity] " + nulaJedan + " 0)";
 
             if (nulaJedan == "=")
-                qSelect +=  " and dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]>="+granicnoVreme+" ";
+                qSelect += " and dbo.[Stirg Produkcija$Prod_ Order Routing Line].[Run Time]>=" + granicnoVreme + " ";// and dbo.[Stirg Produkcija$Prod_ Order Line].[Remaining Quantity]>0";//and   dbo.[Stirg Produkcija$Prod_ Order Line].[Finished Quantity]=0
 
-                qSelect = PrimeniFiltere(qSelect);
+            qSelect = PrimeniFiltere(qSelect);
 
             DataTable dt = metode.DB.baza_upit(qSelect);
 
@@ -463,14 +557,46 @@ namespace SM_PracenjeRadnika
             }
         }
 
+
+        private double[] UtrosenoVremePoArtiklu(DataGridView dv,string nalog, string artikal, string operationNo)
+        {
+            double utrosenoVreme = 0;
+            double izlaznaKolicina = 0;
+          
+            foreach (DataGridViewRow row in  dv.Rows)
+            {
+                if (row.Cells["Broj artikla"].Value.ToString().Equals(artikal) && row.Cells["Broj naloga za proizvodnju"].Value.ToString().Equals(nalog) 
+                    && row.Cells["Broj operacije"].Value.ToString().Equals(operationNo))
+                {
+
+                    utrosenoVreme += double.Parse(row.Cells["stvarno trajanje"].Value.ToString());
+                    izlaznaKolicina += double.Parse(row.Cells["izlazna količina"].Value.ToString());
+                }
+            }
+
+            double[] izlaz = new double[2] { utrosenoVreme, izlaznaKolicina };
+            return izlaz;
+        }
+
+
+        //ovde sam menjao dgvOutpuJournalData.CurrentRow+
         private double IzracunajVreme(double ukupnoCekirani)
         {
+            granicnoVreme = 1;
             if (dgvProdOrderRoutingLine.CurrentRow != null)
             {
-                double utrosenoVreme = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["stvarno Trajanje"].Value.ToString());
+                double[] rez = UtrosenoVremePoArtiklu(dgvOutpuJournalData, dgvOutpuJournalData.CurrentRow.Cells["Broj naloga za proizvodnju"].Value.ToString(),
+                    dgvOutpuJournalData.CurrentRow.Cells["Broj artikla"].Value.ToString(), dgvOutpuJournalData.CurrentRow.Cells["Broj operacije"].Value.ToString());
+
+
+                double utrosenoVreme = rez[0];
+                double uradjeno = 0;// rez[1]; 
+                tbUtrosenoVreme.Text = utrosenoVreme.ToString();
+          
+
                 double predvidjenoVreme = 0;
                 double procenat = 0;
-                double uradjeno = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["izlazna količina"].Value.ToString());
+              
                 double skart = double.Parse(dgvOutpuJournalData.CurrentRow.Cells["količina škarta"].Value.ToString());
                 double predvidjenoVremePoKomadu = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme izvođenja"].Value.ToString());
                 double vremePodesavanja = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme podešavanja"].Value.ToString());
@@ -481,27 +607,29 @@ namespace SM_PracenjeRadnika
                 //pronadji koilko puta je radio
                 foreach (DataGridViewRow row in dgvRadiciDodatni.Rows)
                 {
+                    uradjeno+=double.Parse(row.Cells["izlazna količina"].Value.ToString());
                     if (row.Cells[0].Value.ToString().Equals(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString()))
                     {
                         radnikUpunoCekirao++;
                     }
                 }
+                tbIzlaznaKolicina.Text = uradjeno.ToString();
                 if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
                     predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
-                if (uradjeno >= 0)
+                if (uradjeno > 0)
                 {
-                    tbUtrosenoVreme.Text = utrosenoVreme.ToString();
-                    tbIzlaznaKolicina.Text = uradjeno.ToString();
+                   
+                   
                     tbSkart.Text = skart.ToString();
 
-                    predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
-                    tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
+                    predvidjenoVreme = (vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart))/ukupnoCekirani*radnikUpunoCekirao;
+                    tbPredvidjenoVreme.Text = predvidjenoVreme.ToString("##.##");
 
                     procenat = predvidjenoVreme * 100 / utrosenoVreme;
                     tbProcenat.Text = procenat.ToString("##.##") + "%";
                     gbOdradjeno.Visible = true;
                     gbPredvidjenoVreme.Visible = false;
-                    return 0;
+                    return predvidjenoVreme;
                 }
                 else
                 {
@@ -511,12 +639,12 @@ namespace SM_PracenjeRadnika
                     {
                         uradjenoOdOstalihRadnika+= double.Parse(r.Cells["izlazna količina"].Value.ToString());
                     }
-                    if (predvidjenoVremePoKomadu > 119)
+                    if (predvidjenoVremePoKomadu > granicnoVreme)
                     {
                         tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
                         predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (narucenaKolicina - uradjenaKolicina - uradjeno);
                         predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
-                        tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+                        tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString("##.##");
                         gbPredvidjenoVreme.Visible = true;
                         gbOdradjeno.Visible = false;
                         return predvidjenoVreme;
@@ -532,14 +660,85 @@ namespace SM_PracenjeRadnika
             else return 0;
         }
 
-        private double IzracunajVreme(double ukupnoCekirani,DataGridViewRow r)
+        //private double IzracunajVreme(double ukupnoCekirani,DataGridViewRow r)
+        //{
+        //    if (dgvProdOrderRoutingLine.CurrentRow != null)
+        //    {
+        //        double utrosenoVreme = double.Parse(r.Cells["stvarno Trajanje"].Value.ToString());
+        //        double predvidjenoVreme = 0;
+        //        double procenat = 0;
+        //        double uradjeno = double.Parse(r.Cells["izlazna količina"].Value.ToString());
+        //        double skart = double.Parse(r.Cells["količina škarta"].Value.ToString());
+        //        double predvidjenoVremePoKomadu = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme izvođenja"].Value.ToString());
+        //        double vremePodesavanja = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme podešavanja"].Value.ToString());
+        //        double narucenaKolicina = double.Parse(r.Cells["Naručena količina"].Value.ToString());
+        //        double uradjenaKolicina = double.Parse(r.Cells["urađena količina"].Value.ToString());
+        //        double radnikUpunoCekirao = 0;
+
+        //        //pronadji koilko puta je radio
+        //        foreach (DataGridViewRow row in dgvRadiciDodatni.Rows)
+        //        {
+        //            if (row.Cells[0].Value.ToString().Equals(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString()))
+        //            {
+        //                radnikUpunoCekirao++;
+        //            }
+        //        }
+        //        if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
+        //            predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
+        //        if (uradjeno > 0)
+        //        {
+        //            tbUtrosenoVreme.Text = utrosenoVreme.ToString();
+        //            tbIzlaznaKolicina.Text = uradjeno.ToString();
+        //            tbSkart.Text = skart.ToString();
+
+        //            predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
+        //            predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
+        //            tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
+
+        //            procenat = predvidjenoVreme * 100 / utrosenoVreme;
+        //            tbProcenat.Text = procenat.ToString("##.##") + "%";
+        //            gbOdradjeno.Visible = true;
+        //            gbPredvidjenoVreme.Visible = false;
+        //            return predvidjenoVreme;//0
+        //        }
+        //        else
+        //        {
+        //            if (predvidjenoVremePoKomadu > 119)
+        //            {
+        //                tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
+        //                predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (narucenaKolicina - uradjenaKolicina - uradjeno);
+        //                predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
+        //                tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+        //                gbPredvidjenoVreme.Visible = true;
+        //                gbOdradjeno.Visible = false;
+        //                return predvidjenoVreme;
+        //            }
+        //            else
+        //            {
+        //                gbPredvidjenoVreme.Visible = false;
+        //                gbOdradjeno.Visible = false;
+        //                return 0;
+        //            }
+        //        }
+        //    }
+        //    else return 0;
+        //}
+
+
+        private double[] IzracunajVreme(double ukupnoCekirani, DataGridViewRow r)
         {
+            granicnoVreme = 1;
             if (dgvProdOrderRoutingLine.CurrentRow != null)
             {
-                double utrosenoVreme = double.Parse(r.Cells["stvarno Trajanje"].Value.ToString());
+                double[] rez = UtrosenoVremePoArtiklu(dgvOutpuJournalData, r.Cells["Broj naloga za proizvodnju"].Value.ToString(),
+                            r.Cells["Broj artikla"].Value.ToString(), r.Cells["Broj operacije"].Value.ToString());
+
+
+                double utrosenoVreme = rez[0];
+                double uradjeno = 0;// rez[1];
+              
                 double predvidjenoVreme = 0;
-                double procenat = 0;
-                double uradjeno = double.Parse(r.Cells["izlazna količina"].Value.ToString());
+               
                 double skart = double.Parse(r.Cells["količina škarta"].Value.ToString());
                 double predvidjenoVremePoKomadu = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme izvođenja"].Value.ToString());
                 double vremePodesavanja = double.Parse(dgvProdOrderRoutingLine.CurrentRow.Cells["vreme podešavanja"].Value.ToString());
@@ -547,53 +746,59 @@ namespace SM_PracenjeRadnika
                 double uradjenaKolicina = double.Parse(r.Cells["urađena količina"].Value.ToString());
                 double radnikUpunoCekirao = 0;
 
+              
                 //pronadji koilko puta je radio
                 foreach (DataGridViewRow row in dgvRadiciDodatni.Rows)
                 {
+                    uradjeno += double.Parse(row.Cells["izlazna količina"].Value.ToString());
                     if (row.Cells[0].Value.ToString().Equals(dgvRadnici.CurrentRow.Cells["Šifra resursa"].Value.ToString()))
                     {
                         radnikUpunoCekirao++;
                     }
                 }
+
+
                 if (dgvProdOrderRoutingLine.CurrentRow.Cells["Vremenska jedinica"].Value.ToString() == "SAT")
                     predvidjenoVremePoKomadu = predvidjenoVremePoKomadu * 60;
                 if (uradjeno > 0)
                 {
-                    tbUtrosenoVreme.Text = utrosenoVreme.ToString();
-                    tbIzlaznaKolicina.Text = uradjeno.ToString();
-                    tbSkart.Text = skart.ToString();
-
+              
                     predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (uradjeno + skart);
-                    tbPredvidjenoVreme.Text = predvidjenoVreme.ToString();
+                    predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
+                 
+                    
+                    double[] izlaz = new double[3] { predvidjenoVreme, utrosenoVreme,1 };
+                    return izlaz;
 
-                    procenat = predvidjenoVreme * 100 / utrosenoVreme;
-                    tbProcenat.Text = procenat.ToString("##.##") + "%";
-                    gbOdradjeno.Visible = true;
-                    gbPredvidjenoVreme.Visible = false;
-                    return 0;
                 }
                 else
                 {
-                    if (predvidjenoVremePoKomadu > 119)
+                    if (predvidjenoVremePoKomadu >= granicnoVreme)
                     {
-                        tbUtrosenoVremeNula.Text = utrosenoVreme.ToString();
+                     
                         predvidjenoVreme = vremePodesavanja + predvidjenoVremePoKomadu * (narucenaKolicina - uradjenaKolicina - uradjeno);
                         predvidjenoVreme = predvidjenoVreme / ukupnoCekirani * radnikUpunoCekirao;
-                        tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
-                        gbPredvidjenoVreme.Visible = true;
-                        gbOdradjeno.Visible = false;
-                        return predvidjenoVreme;
+                        //      tbPredvidjenoVremePoKomadu.Text = predvidjenoVreme.ToString();
+                        
+
+                        double[] izlaz = new double[3] { predvidjenoVreme, utrosenoVreme,0 };
+                        return izlaz;
                     }
                     else
                     {
-                        gbPredvidjenoVreme.Visible = false;
-                        gbOdradjeno.Visible = false;
-                        return 0;
+                        
+                        double[] izlaz = new double[3] { 0, 0,0 };
+                        return izlaz;
                     }
                 }
             }
-            else return 0;
+            else
+            {
+                double[] izlaz = new double[3] { 0, 0,0 };
+                return izlaz;
+            }
         }
+
 
         private void UcitajIskoriscenost(string IdRadnik)
         {
@@ -604,11 +809,13 @@ namespace SM_PracenjeRadnika
             double ukupnoPredvidjenoNula = IzracunajUkupnoVreme(IdRadnik,"=");
             double ostatakMinuti = 0;
             double procenat = 0;
+
             if (dgvOutpuJournalData.Rows.Count > 0)
             {
                 foreach (DataGridViewRow r in dgvOutpuJournalData.Rows)
                 {
-                    if (double.Parse(r.Cells["Izlazna količina"].Value.ToString())>0)
+                   
+                    if ((double.Parse(r.Cells["Izlazna količina"].Value.ToString())+ double.Parse(r.Cells["Urađena količina"].Value.ToString())) >0)
                     { 
                         ukupnoUtroseno += double.Parse(r.Cells["stvarno trajanje"].Value.ToString());
                     }
@@ -618,6 +825,8 @@ namespace SM_PracenjeRadnika
                         ukupnoUtrosenoNula += double.Parse(r.Cells["stvarno trajanje"].Value.ToString());
                     }
                 }
+
+
                 #region odradjeno
                 //u min
                 tbUkupnoPredvidjenoVreme.Text = ukupnoPredvidjeno.ToString("##.##") + "min";
@@ -693,6 +902,92 @@ namespace SM_PracenjeRadnika
 
                 if (dgvOutpuJournalData.Columns[dgvOutpuJournalData.CurrentCell.ColumnIndex].Name == "Broj artikla")
                     cbItemNo.Text = dgvOutpuJournalData.CurrentCell.Value.ToString();
+            }
+        }
+
+        private void btnUnesiVreme_Click(object sender, EventArgs e)
+        {
+            if (dgvRadnici.CurrentRow != null)
+            {
+                DateTime datumOd = new DateTime(dtpOJDod.Value.Year, dtpOJDod.Value.Month, dtpOJDod.Value.Day);
+                DateTime datumDo = new DateTime(dtpOJDdo.Value.Year, dtpOJDdo.Value.Month, dtpOJDdo.Value.Day);
+                metode.DB.pristup_bazi("INSERT  INTO  radnikVreme(resourceNo, datumOd, datumDo, vremeProvedeno) " +
+                    "VALUES(N'" + dgvRadnici.CurrentRow.Cells["šifra resursa"].Value.ToString() + "',(CONVERT(date, '" + datumOd + "', 105)), (CONVERT(date, '" + datumDo + "', 105)) ," + tbVremeRadnik.Text + ")");
+                UcitajRadnikVreme();
+
+            }
+
+        }
+
+        private void UcitajRadnikVreme()
+        {
+            DataTable dt = metode.DB.baza_upit("SELECT  datumOd, datumDo, vremeProvedeno FROM   [stirg_local].dbo.radnikVreme" +
+                " WHERE(resourceNo = N'"+dgvRadnici.CurrentRow.Cells["šifra resursa"].Value.ToString() + "')");
+            if (dt.Rows.Count > 0)
+            {
+                dgvRadnikVreme.DataSource=dt;
+                dgvRadnikVreme.Columns["datumOd"].DefaultCellStyle.Format = "dd.MM.yyyy";
+                dgvRadnikVreme.Columns["datumDo"].DefaultCellStyle.Format = "dd.MM.yyyy";
+            }
+            else dgvRadnikVreme.DataSource = null;
+        }
+
+        private void btnStampa_Click(object sender, EventArgs e)
+        {
+            string datumOd = dtpOJDod.Value.Year + "-" + dtpOJDod.Value.Month + "-" + dtpOJDod.Value.Day;
+            string datumDo = dtpOJDdo.Value.Year + "-" + dtpOJDdo.Value.Month + "-" + dtpOJDdo.Value.Day;
+            double cekirano = double.Parse(tbUkupnoUtrosenoVremeSati.Text.Remove(tbUkupnoUtrosenoVremeSati.Text.Length-1));
+            double pred = double.Parse(tbUkupnoPredvidjenoVremeSati.Text.Remove(tbUkupnoPredvidjenoVremeSati.Text.Length - 1)); ;
+
+            makeReport("C:\\Program files\\SM\\PracenjeRadnika.rpt");
+            SetParameters(dgvRadnici.CurrentRow.Cells["šifra resursa"].Value.ToString(),datumOd, datumDo, cekirano,pred);
+
+            Report rep = new Report(ReportDoc);
+
+            rep.ShowDialog();
+        }
+
+        private void SetParameters(string resourceNo, string datumOd, string datumDo,double vreme,double predvidjeno)
+        {
+           
+            ReportDoc.SetParameterValue("datumOd", datumOd);
+            ReportDoc.SetParameterValue("datumDo", datumDo);
+            ReportDoc.SetParameterValue("vremeCekirano",vreme );
+            ReportDoc.SetParameterValue("resourceNo", resourceNo);
+            ReportDoc.SetParameterValue("vremePredvidjeno", predvidjeno);
+        }
+
+        private void makeReport(string ReportFile)
+        {
+            ReportDoc = new ReportDocument();
+            TextReader textReader = new StreamReader("c:\\Program files\\SM\\dblogon.txt");
+            string uid = textReader.ReadLine();
+            string pwd = textReader.ReadLine();
+            string server = textReader.ReadLine();
+            string db = textReader.ReadLine();
+            textReader.Close();
+
+            ReportDoc.Load(ReportFile);
+            ReportDoc.SetDatabaseLogon(uid, pwd, server, db, true);
+            ReportDoc.DataSourceConnections[0].IntegratedSecurity = false;
+        }
+
+        private void btnObrisi_Click(object sender, EventArgs e)
+        {
+            if(dgvRadnikVreme.CurrentRow!=null)
+            {
+                DateTime dod = DateTime.Parse(dgvRadnikVreme.CurrentRow.Cells["datumOd"].Value.ToString());
+                DateTime ddo = DateTime.Parse(dgvRadnikVreme.CurrentRow.Cells["datumDo"].Value.ToString());
+
+                string datumOd = dod.Year + "-" + dod.Month + "-" + dod.Day;
+                string datumDo = ddo.Year + "-" + ddo.Month + "-" + ddo.Day;
+
+                metode.DB.pristup_bazi("DELETE FROM  radnikVreme " +
+                    " WHERE (resourceNo = N'" + dgvRadnici.CurrentRow.Cells["šifra resursa"].Value.ToString() + "')" +
+                    " AND(datumOd = CONVERT(DATETIME, '"+ datumOd + "', 102))" +
+                    " AND(datumDo = CONVERT(DATETIME, '"+ datumDo+ "', 102))");
+
+                UcitajRadnikVreme();
             }
         }
     }
