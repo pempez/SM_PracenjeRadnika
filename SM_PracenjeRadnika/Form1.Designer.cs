@@ -95,6 +95,8 @@
             this.label21 = new System.Windows.Forms.Label();
             this.dgvRadiciDodatni = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnIzracunaj = new System.Windows.Forms.Button();
+            this.btnStampaSve = new System.Windows.Forms.Button();
             this.btnStampa = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.cbRadnaGrupa = new System.Windows.Forms.ComboBox();
@@ -611,6 +613,7 @@
             this.dgvRadnikVreme.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRadnikVreme.Size = new System.Drawing.Size(310, 183);
             this.dgvRadnikVreme.TabIndex = 4;
+            this.dgvRadnikVreme.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvRadnikVreme_CellEndEdit);
             // 
             // btnUnesiVreme
             // 
@@ -836,6 +839,8 @@
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox3.Controls.Add(this.btnIzracunaj);
+            this.groupBox3.Controls.Add(this.btnStampaSve);
             this.groupBox3.Controls.Add(this.btnStampa);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.cbRadnaGrupa);
@@ -859,13 +864,33 @@
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             // 
+            // btnIzracunaj
+            // 
+            this.btnIzracunaj.Location = new System.Drawing.Point(726, 75);
+            this.btnIzracunaj.Name = "btnIzracunaj";
+            this.btnIzracunaj.Size = new System.Drawing.Size(92, 23);
+            this.btnIzracunaj.TabIndex = 44;
+            this.btnIzracunaj.Text = "Izračunaj vreme";
+            this.btnIzracunaj.UseVisualStyleBackColor = true;
+            this.btnIzracunaj.Click += new System.EventHandler(this.btnIzracunaj_Click);
+            // 
+            // btnStampaSve
+            // 
+            this.btnStampaSve.Location = new System.Drawing.Point(953, 75);
+            this.btnStampaSve.Name = "btnStampaSve";
+            this.btnStampaSve.Size = new System.Drawing.Size(92, 23);
+            this.btnStampaSve.TabIndex = 43;
+            this.btnStampaSve.Text = "Štampaj Sve";
+            this.btnStampaSve.UseVisualStyleBackColor = true;
+            this.btnStampaSve.Click += new System.EventHandler(this.btnStampaSve_Click);
+            // 
             // btnStampa
             // 
-            this.btnStampa.Location = new System.Drawing.Point(726, 75);
+            this.btnStampa.Location = new System.Drawing.Point(824, 75);
             this.btnStampa.Name = "btnStampa";
-            this.btnStampa.Size = new System.Drawing.Size(92, 23);
+            this.btnStampa.Size = new System.Drawing.Size(123, 23);
             this.btnStampa.TabIndex = 42;
-            this.btnStampa.Text = "Štampaj";
+            this.btnStampa.Text = "Štampaj pojedinačno";
             this.btnStampa.UseVisualStyleBackColor = true;
             this.btnStampa.Click += new System.EventHandler(this.btnStampa_Click);
             // 
@@ -919,12 +944,13 @@
             // cbPeriodOJD
             // 
             this.cbPeriodOJD.AutoSize = true;
+            this.cbPeriodOJD.BackColor = System.Drawing.SystemColors.Control;
             this.cbPeriodOJD.Location = new System.Drawing.Point(372, 10);
             this.cbPeriodOJD.Name = "cbPeriodOJD";
             this.cbPeriodOJD.Size = new System.Drawing.Size(56, 17);
             this.cbPeriodOJD.TabIndex = 37;
             this.cbPeriodOJD.Text = "Period";
-            this.cbPeriodOJD.UseVisualStyleBackColor = true;
+            this.cbPeriodOJD.UseVisualStyleBackColor = false;
             // 
             // cbItemNo
             // 
@@ -1032,6 +1058,7 @@
             this.Controls.Add(this.groupBox1);
             this.MinimumSize = new System.Drawing.Size(1200, 799);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Praćenje radnika";
             this.groupBox1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -1150,6 +1177,8 @@
         private System.Windows.Forms.DataGridView dgvRadnikVreme;
         private System.Windows.Forms.Button btnStampa;
         private System.Windows.Forms.Button btnObrisi;
+        private System.Windows.Forms.Button btnStampaSve;
+        private System.Windows.Forms.Button btnIzracunaj;
     }
 }
 
