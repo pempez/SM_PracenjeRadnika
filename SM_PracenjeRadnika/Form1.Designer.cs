@@ -224,7 +224,7 @@
             this.gbPredvidjenoVremeUkupno.Controls.Add(this.label20);
             this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoUtrosenoVremeNula);
             this.gbPredvidjenoVremeUkupno.Controls.Add(this.tbUkupnoPredvidjenoVremeNula);
-            this.gbPredvidjenoVremeUkupno.Location = new System.Drawing.Point(538, 16);
+            this.gbPredvidjenoVremeUkupno.Location = new System.Drawing.Point(555, 16);
             this.gbPredvidjenoVremeUkupno.Name = "gbPredvidjenoVremeUkupno";
             this.gbPredvidjenoVremeUkupno.Size = new System.Drawing.Size(253, 113);
             this.gbPredvidjenoVremeUkupno.TabIndex = 19;
@@ -287,7 +287,7 @@
             this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoUtrosenoVreme);
             this.gbOdradjenoUkupno.Controls.Add(this.label11);
             this.gbOdradjenoUkupno.Controls.Add(this.tbUkupnoPredvidjenoVreme);
-            this.gbOdradjenoUkupno.Location = new System.Drawing.Point(275, 16);
+            this.gbOdradjenoUkupno.Location = new System.Drawing.Point(292, 16);
             this.gbOdradjenoUkupno.Name = "gbOdradjenoUkupno";
             this.gbOdradjenoUkupno.Size = new System.Drawing.Size(257, 113);
             this.gbOdradjenoUkupno.TabIndex = 18;
@@ -303,7 +303,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(9, 20);
+            this.label17.Location = new System.Drawing.Point(9, 21);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(82, 13);
             this.label17.TabIndex = 10;
@@ -410,8 +410,9 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvRadnici.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvRadnici.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvRadnici.Size = new System.Drawing.Size(266, 289);
+            this.dgvRadnici.Size = new System.Drawing.Size(284, 289);
             this.dgvRadnici.TabIndex = 0;
+            this.dgvRadnici.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvRadnici_CellClick);
             this.dgvRadnici.SelectionChanged += new System.EventHandler(this.dgvRadnici_SelectionChanged);
             this.dgvRadnici.Click += new System.EventHandler(this.dgvRadnici_Click);
             this.dgvRadnici.MouseEnter += new System.EventHandler(this.dgvRadnici_MouseEnter);
